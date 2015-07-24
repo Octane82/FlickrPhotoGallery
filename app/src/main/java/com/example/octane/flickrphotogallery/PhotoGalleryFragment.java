@@ -1,6 +1,8 @@
 package com.example.octane.flickrphotogallery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -59,6 +62,21 @@ public class PhotoGalleryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_photo_gallery, container, false);
         mGridView = (GridView)v.findViewById(R.id.gridView);
         setupAdapter();
+        // Прослушивание нажатия на изображение в GridView
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> gridView, View view, int pos,
+                                    long id) {
+                GalleryItem item = mItems.get(pos);
+                Uri photoPageUri = Uri.parse(item.getPhotoPageUrl());
+                // Отправляем неявный интент для открытия браузера
+                //Intent i = new Intent(Intent.ACTION_VIEW, photoPageUri);
+                Intent i = new Intent(getActivity(), PhotoPageActivity.class);
+                i.setData(photoPageUri);
+                startActivity(i);
+            }
+        });
+
         return v;
     }
 
